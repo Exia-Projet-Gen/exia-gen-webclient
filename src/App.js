@@ -13,12 +13,17 @@ class App extends Component {
     urlToFetchDatas = this.baseURI;
     urlToSearchDatas = this.baseURI + "search/";
     urlToPostData = this.baseURI;
+    urlToDeleteData = this.baseURI;
 
     constructor(props) {
         super(props);
 
         this.state = {
-            datas: []
+            datas: [],
+            selectedRow: {
+                id: -1,
+                value: ""
+            }
         }
     }
 
@@ -43,7 +48,11 @@ class App extends Component {
             .then((response) => response.json())
             .then((responseJson) => {
                 this.setState({
-                    datas: responseJson
+                    datas: responseJson,
+                    selectedRow: {
+                        id: -1,
+                        name: ""
+                    }
                 })
             })
             .catch((error) => {
@@ -52,23 +61,61 @@ class App extends Component {
     }
 
     performCreateRequest(word) {
-
         fetch(this.urlToPostData, {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Methods': 'POST, GET, OPTIONS'
-            },
             method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
             body: JSON.stringify({name: word})
         })
             .then((response) => response.json())
             .then((responseJson) => {
                 console.log(responseJson);
+                this.setState({
+                    datas: this.state.datas.concat([{
+                        id: responseJson.id,
+                        name: responseJson.name
+                    }]),
+                })
             })
             .catch((error) => {
+                console.log("erreur");
                 console.error(error);
             });
+    }
+
+    performDeleteRequest() {
+
+        let isValid = null;
+        if(this.state.selectedRow.id != -1) {
+            fetch(this.urlToDeleteData + this.state.selectedRow.id, {
+                method: "DELETE",
+            })
+                .then((responseJson) => {
+                    const updatedDatas = this.state.datas.filter((item) => {
+                       return item.id !== this.state.selectedRow.id;
+                    });
+                    this.setState({
+                        selectedRow: {
+                          id: -1,
+                          name: ""
+                        },
+                        datas: updatedDatas
+                    });
+                    isValid = true;
+                })
+                .catch((error) => {
+                    console.log("toto");
+                    console.log(error);
+                    isValid = false;
+                });
+
+            return isValid;
+        }
+
+        // No row selected
+        return false;
     }
 
     render() {
@@ -81,8 +128,12 @@ class App extends Component {
             <Topbar/>
             <div className="container">
                 <SearchForm performSearch={(pattern) => ( this.performSearchRequest(pattern) )} />
-                <CreationForm performCreate={(pattern) => ( this.performCreateRequest(pattern) )} />
-                <Table datas={ this.state.datas } />
+                <CreationForm
+                    selectedWord={this.state.selectedRow}
+                    performCreate={(pattern) => ( this.performCreateRequest(pattern) )}
+                    performDelete={() => ( this.performDeleteRequest() ) }
+                />
+                <Table datas={ this.state.datas } selectedWord={this.state.selectedRow} selectRowAction={(selectedRow) => ( this.setState({selectedRow: selectedRow}) ) } />
             </div>
           </div>
         );

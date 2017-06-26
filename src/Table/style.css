@@ -1,3 +1,7 @@
 .verticalFixed {
     max-height: 400px;
 }
+
+.rt-tr-group:hover {
+    cursor: pointer;
+}

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import {Navbar as Navbar, Nav, NavItem, MenuItem, NavDropdown } from 'react-bootstrap';
+import {Navbar, Nav, NavItem} from 'react-bootstrap';
 
-import style from './style.css';
+import './style.css';
 
 class Topbar extends Component {
     render() {
@@ -9,7 +9,7 @@ class Topbar extends Component {
             <Navbar inverse collapseOnSelect>
                 <Navbar.Header>
                     <Navbar.Brand>
-                        <a href="#">EXIA - Gen project</a>
+                        <a href="/home">EXIA - Gen project</a>
                     </Navbar.Brand>
                     <Navbar.Toggle />
                 </Navbar.Header>

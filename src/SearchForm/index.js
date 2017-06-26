@@ -12,22 +12,33 @@ class Form extends Component {
     }
 
     loadPattern(event) {
-        let fieldName = event.target.name;
         let fieldVal = event.target.value;
         this.setState({
            pattern: fieldVal
         });
     }
 
+    handleBtnClick(pattern, e) {
+
+        e.preventDefault();
+
+        return this.props.performSearch(pattern);
+    }
+
     render() {
         return (
-            <BForm horizontal className="col-sm-6">
+            <BForm inline className="col-sm-6" onSubmit={ (e) => ( this.handleBtnClick(this.state.pattern, e) ) }>
                 <FormGroup controlId="formHorizontalSearch">
-                    <Col sm={12}>
+                    <Col sm={2}>
+                        <Button type="submit" onClick={ (e) => ( this.handleBtnClick("", e) )}>
+                            Search all
+                        </Button>
+                    </Col>
+                    <Col sm={10}>
                         <InputGroup>
                             <FormControl type="text" placeholder="Search a word" onChange={ this.loadPattern.bind(this) }/>
                             <InputGroup.Button>
-                                <Button type="button" onClick={ () => ( this.props.performSearch(this.state.pattern) )}>
+                                <Button type="submit" onClick={ (e) => ( this.handleBtnClick(this.state.pattern, e) )}>
                                     Search
                                 </Button>
                             </InputGroup.Button>

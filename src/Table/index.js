@@ -5,10 +5,6 @@ import './style.css';
 
 class Table extends Component {
 
-    constructor(props) {
-        super(props);
-    }
-
     render() {
 
         const columns = [
@@ -22,16 +18,31 @@ class Table extends Component {
             }
         ];
 
+        const selectedWordId = this.props.selectedWord.id;
+
         return (
             <ReactTable
                 data={this.props.datas}
-                className="verticalFixed"
+                className="verticalFixed col-sm-12 -highlight"
                 columns={columns}
                 defaultPageSize={10}
                 defaultSorted={[{
                     id: 'word',
                     desc: false
                 }]}
+                getTrProps={(params, rowInfo) => {
+                    let style = {};
+                    if (rowInfo && rowInfo.row && rowInfo.row.id === selectedWordId) {
+                        style = { backgroundColor: "#017ede" };
+                    }
+                    return {
+                        style,
+                        onClick: () => this.props.selectRowAction({
+                            id: rowInfo.row.id,
+                            name: rowInfo.row.name
+                        })
+                    };
+                }}
             />
         );
     }

@@ -19,18 +19,28 @@ class Form extends Component {
     }
 
     render() {
+
+        const hasSelectedRow = this.props.selectedWord.id !== -1;
+        const inputPlaceholder = hasSelectedRow ? "Update the word" : "Create a word";
+        const btnVal = hasSelectedRow ? "Update" : "Create";
+
         return (
             <BForm horizontal className="col-sm-6">
                 <FormGroup controlId="formHorizontalCreation">
-                    <Col sm={12}>
+                    <Col sm={10}>
                         <InputGroup>
-                            <FormControl type="text" placeholder="Create a word" onChange={ this.loadPattern.bind(this) }/>
+                            <FormControl type="text" placeholder={inputPlaceholder} onChange={ this.loadPattern.bind(this) }/>
                             <InputGroup.Button>
                                 <Button type="button" onClick={ () => ( this.props.performCreate(this.state.pattern) )}>
-                                    Create
+                                    {btnVal}
                                 </Button>
                             </InputGroup.Button>
                         </InputGroup>
+                    </Col>
+                    <Col sm={1}>
+                        <Button type="button" onClick={ () => ( this.props.performDelete() )} disabled={!hasSelectedRow}>
+                            Delete
+                        </Button>
                     </Col>
                 </FormGroup>
             </BForm>
