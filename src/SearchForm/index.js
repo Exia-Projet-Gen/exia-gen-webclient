@@ -30,7 +30,7 @@ class Form extends Component {
             <BForm inline className="col-sm-6" onSubmit={ (e) => ( this.handleBtnClick(this.state.pattern, e) ) }>
                 <FormGroup controlId="formHorizontalSearch">
                     <Col sm={2}>
-                        <Button type="submit" onClick={ (e) => ( this.handleBtnClick("", e) )}>
+                        <Button  bsStyle="success" type="submit" onClick={ (e) => ( this.handleBtnClick("", e) )}>
                             Search all
                         </Button>
                     </Col>
@@ -38,7 +38,7 @@ class Form extends Component {
                         <InputGroup>
                             <FormControl type="text" placeholder="Search a word" onChange={ this.loadPattern.bind(this) }/>
                             <InputGroup.Button>
-                                <Button type="submit" onClick={ (e) => ( this.handleBtnClick(this.state.pattern, e) )}>
+                                <Button  bsStyle="success" type="submit" onClick={ (e) => ( this.handleBtnClick(this.state.pattern, e) )}>
                                     Search
                                 </Button>
                             </InputGroup.Button>

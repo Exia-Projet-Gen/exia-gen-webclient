@@ -5,3 +5,8 @@
 .rt-tr-group:hover {
     cursor: pointer;
 }
+
+.dictionaryTable .-pagination .-btn{
+    background-color: #265a88 ;
+    color: #eeeeee;
+}

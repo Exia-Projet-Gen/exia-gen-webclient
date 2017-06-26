@@ -61,26 +61,69 @@ class App extends Component {
     }
 
     performCreateRequest(word) {
+
+        if ( this.state.selectedRow.id !== -1 ) {
+
+            this.performUpdateRequest(word);
+
+        } else {
+            fetch(this.urlToPostData, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({name: word})
+            })
+                .then((response) => response.json())
+                .then((responseJson) => {
+                    console.log(responseJson);
+                    this.setState({
+                        datas: this.state.datas.concat([{
+                            id: responseJson.id,
+                            name: responseJson.name
+                        }]),
+                    })
+                })
+                .catch((error) => {
+                    console.log("erreur");
+                    console.error(error);
+                });
+        }
+    }
+
+    performUpdateRequest(newValue) {
+        const word = this.state.selectedRow;
+
         fetch(this.urlToPostData, {
-            method: "POST",
+            method: "PUT",
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             },
-            body: JSON.stringify({name: word})
+            body: JSON.stringify({
+                id: word.id,
+                name: newValue
+            })
         })
-            .then((response) => response.json())
             .then((responseJson) => {
-                console.log(responseJson);
+
+                const datas = this.state.datas;
+                const index = datas.findIndex(item => item.id === word.id);
+
                 this.setState({
-                    datas: this.state.datas.concat([{
-                        id: responseJson.id,
-                        name: responseJson.name
-                    }]),
+                    datas: [
+                        ...datas.slice(0,index),
+                        {id: word.id, name: newValue},
+                        ...datas.slice(index+1)
+                    ],
+                    selectedRow: {
+                        id: -1,
+                        name: ""
+                    }
                 })
             })
             .catch((error) => {
-                console.log("erreur");
                 console.error(error);
             });
     }
@@ -123,10 +166,9 @@ class App extends Component {
           <div className="App">
             <div className="App-header">
               <img src={logo} className="App-logo" alt="logo" />
-              <h1>EXIA GEN FRENCH DICTIONARY</h1>
+              <h1>EXIA GEN DICTIONARY</h1>
             </div>
-            <Topbar/>
-            <div className="container">
+            <div className="container dictionary-container">
                 <SearchForm performSearch={(pattern) => ( this.performSearchRequest(pattern) )} />
                 <CreationForm
                     selectedWord={this.state.selectedRow}

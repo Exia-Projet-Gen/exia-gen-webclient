@@ -23,7 +23,7 @@ class Table extends Component {
         return (
             <ReactTable
                 data={this.props.datas}
-                className="verticalFixed col-sm-12 -highlight"
+                className="dictionaryTable verticalFixed col-sm-12 -highlight"
                 columns={columns}
                 defaultPageSize={10}
                 defaultSorted={[{

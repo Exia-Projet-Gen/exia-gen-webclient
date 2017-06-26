@@ -18,6 +18,15 @@ class Form extends Component {
         });
     }
 
+    handleAction(pattern) {
+
+        this.setState({
+            pattern: ""
+        });
+
+        this.props.performCreate(pattern);
+    }
+
     render() {
 
         const hasSelectedRow = this.props.selectedWord.id !== -1;
@@ -29,16 +38,16 @@ class Form extends Component {
                 <FormGroup controlId="formHorizontalCreation">
                     <Col sm={10}>
                         <InputGroup>
-                            <FormControl type="text" placeholder={inputPlaceholder} onChange={ this.loadPattern.bind(this) }/>
+                            <FormControl type="text" placeholder={inputPlaceholder} value={this.state.pattern} onChange={ this.loadPattern.bind(this) }/>
                             <InputGroup.Button>
-                                <Button type="button" onClick={ () => ( this.props.performCreate(this.state.pattern) )}>
+                                <Button  bsStyle="primary" type="button" onClick={ () => ( this.handleAction(this.state.pattern) )}>
                                     {btnVal}
                                 </Button>
                             </InputGroup.Button>
                         </InputGroup>
                     </Col>
                     <Col sm={1}>
-                        <Button type="button" onClick={ () => ( this.props.performDelete() )} disabled={!hasSelectedRow}>
+                        <Button  bsStyle="danger" type="button" onClick={ () => ( this.props.performDelete() )} disabled={!hasSelectedRow}>
                             Delete
                         </Button>
                     </Col>
