@@ -4,8 +4,9 @@ import './App.css';
 
 import CreationForm from './CreationForm';
 import SearchForm from './SearchForm';
-import Topbar from './Topbar';
 import Table from './Table';
+import AlertContainer from 'react-alert';
+import FontAwesome from 'react-fontawesome';
 
 class App extends Component {
 
@@ -83,11 +84,12 @@ class App extends Component {
                             id: responseJson.id,
                             name: responseJson.name
                         }]),
-                    })
+                    });
+
+                    this.showAlert("success", "Word has been created successfully", "check");
                 })
                 .catch((error) => {
-                    console.log("erreur");
-                    console.error(error);
+                    this.showAlert("error", "An error occurred while creating the Word " + word.name, "bomb");
                 });
         }
     }
@@ -121,21 +123,25 @@ class App extends Component {
                         id: -1,
                         name: ""
                     }
-                })
+                });
+                this.showAlert("success", "Word has been updated successfully", "check");
             })
             .catch((error) => {
-                console.error(error);
+                this.showAlert("error", "An error occurred while updating the Word " + word.value, "bomb");
             });
     }
 
     performDeleteRequest() {
 
         let isValid = null;
+        const deletedWord = this.state.selectedRow;
+
         if(this.state.selectedRow.id != -1) {
             fetch(this.urlToDeleteData + this.state.selectedRow.id, {
                 method: "DELETE",
+                mode:"*"
             })
-                .then((responseJson) => {
+                .then((response) => {
                     const updatedDatas = this.state.datas.filter((item) => {
                        return item.id !== this.state.selectedRow.id;
                     });
@@ -146,11 +152,12 @@ class App extends Component {
                         },
                         datas: updatedDatas
                     });
+
+                    this.showAlert("success", "Word has been deleted successfully", "check");
                     isValid = true;
                 })
                 .catch((error) => {
-                    console.log("toto");
-                    console.log(error);
+                    this.showAlert("error", "An error occurred while deleting the Word " + deletedWord.value, "bomb");
                     isValid = false;
                 });
 
@@ -160,6 +167,39 @@ class App extends Component {
         // No row selected
         return false;
     }
+
+
+    showAlert(type, message, iconName) {
+
+        let color;
+        switch (type) {
+            case "success":
+                color= "#5cb85c";
+                break;
+            case "error":
+                color= "#c12e2a ";
+                break;
+            case "info":
+                color= "#5cb85c";
+                break;
+        }
+        this.msg.show(message, {
+            type: type,
+            icon: <FontAwesome
+                name={iconName}
+                size='3x'
+                style={{ textShadow: '0 1px 0 rgba(0, 0, 0, 0.1)', color: color}}
+            />
+        })
+    }
+
+    alertOptions = {
+        offset: 14,
+        position: 'bottom left',
+        theme: 'dark',
+        time: 5000,
+        transition: 'scale'
+    };
 
     render() {
         return (
@@ -176,6 +216,7 @@ class App extends Component {
                     performDelete={() => ( this.performDeleteRequest() ) }
                 />
                 <Table datas={ this.state.datas } selectedWord={this.state.selectedRow} selectRowAction={(selectedRow) => ( this.setState({selectedRow: selectedRow}) ) } />
+                <AlertContainer ref={a => this.msg = a} {...this.alertOptions} />
             </div>
           </div>
         );

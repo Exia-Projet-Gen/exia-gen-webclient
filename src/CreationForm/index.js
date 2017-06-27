@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {Form as BForm, FormGroup, FormControl, Col, Button, InputGroup } from 'react-bootstrap';
+import FontAwesome from 'react-fontawesome';
 
 class Form extends Component {
 
@@ -35,19 +36,31 @@ class Form extends Component {
 
         return (
             <BForm horizontal className="col-sm-6">
-                <FormGroup controlId="formHorizontalCreation">
-                    <Col sm={10}>
-                        <InputGroup>
+                <FormGroup controlId="formHorizontalCreation" className="col-sm-12">
+                    <Col sm={9}>
+                        <InputGroup className="col-sm-12">
                             <FormControl type="text" placeholder={inputPlaceholder} value={this.state.pattern} onChange={ this.loadPattern.bind(this) }/>
                             <InputGroup.Button>
                                 <Button  bsStyle="primary" type="button" onClick={ () => ( this.handleAction(this.state.pattern) )}>
+                                    <FontAwesome
+                                        name="plus"
+                                        size='lg'
+                                        style={{ textShadow: '0 1px 0 rgba(0, 0, 0, 0.1)', marginRight: '8px' }}
+                                    />
+
                                     {btnVal}
                                 </Button>
                             </InputGroup.Button>
                         </InputGroup>
                     </Col>
-                    <Col sm={1}>
+                    <Col sm={3}>
                         <Button  bsStyle="danger" type="button" onClick={ () => ( this.props.performDelete() )} disabled={!hasSelectedRow}>
+                            <FontAwesome
+                                name="bomb"
+                                size='lg'
+                                style={{ textShadow: '0 1px 0 rgba(0, 0, 0, 0.1)', marginRight: '8px' }}
+                            />
+
                             Delete
                         </Button>
                     </Col>
