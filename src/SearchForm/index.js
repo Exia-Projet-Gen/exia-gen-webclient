@@ -32,12 +32,18 @@ class Form extends Component {
         return this.props.performSearch(pattern);
     }
 
+    handleSubmit(e) {
+        e.preventDefault();
+
+        return this.props.performSearch(this.state.pattern);
+    }
+
     render() {
         return (
-            <BForm inline className="col-sm-6" onSubmit={ (e) => ( this.handleBtnClick(this.state.pattern, e) ) }>
+            <BForm inline className="col-sm-6" onSubmit={ (e) => ( this.handleSubmit(e) ) }>
                 <FormGroup controlId="formHorizontalSearch" className="col-sm-12">
                     <Col sm={2}>
-                        <Button  bsStyle="success" type="submit" onClick={ (e) => ( this.handleBtnClick("", e) )}>
+                        <Button  bsStyle="success" type="button" onClick={ (e) => ( this.handleBtnClick("eb", e) )}>
                             <FontAwesome
                                 name="refresh"
                                 size='lg'
@@ -49,7 +55,7 @@ class Form extends Component {
                         <InputGroup>
                             <FormControl type="text" placeholder="Search a word" value={this.state.pattern} onChange={ this.loadPattern.bind(this) }/>
                             <InputGroup.Button>
-                                <Button  bsStyle="success" type="submit" onClick={ (e) => ( this.handleBtnClick(this.state.pattern, e) )}>
+                                <Button  bsStyle="success" type="button" onClick={ (e) => ( this.handleBtnClick(this.state.pattern, e) )}>
                                     <FontAwesome
                                         name="search"
                                         size='lg'
