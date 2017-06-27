@@ -40,7 +40,7 @@ class App extends Component {
                 })
             })
             .catch((error) => {
-                console.error(error);
+                this.showAlert("error", "An error occurred while fetching datas. Please, retry later", "bomb", 20000);
             });
     }
 
@@ -62,7 +62,7 @@ class App extends Component {
                 this.showAlert("info", responseJson.length + " words founds", "info");
             })
             .catch((error) => {
-                console.error(error);
+                this.showAlert("error", "An error occurred while fetching datas. Please, retry later", "bomb", 20000);
             });
     }
 
@@ -174,7 +174,7 @@ class App extends Component {
     }
 
 
-    showAlert(type, message, iconName) {
+    showAlert(type, message, iconName, time = 5000) {
 
         let color;
         switch (type) {
@@ -190,6 +190,7 @@ class App extends Component {
         }
         this.msg.show(message, {
             type: type,
+            time: time,
             icon: <FontAwesome
                 name={iconName}
                 size='3x'

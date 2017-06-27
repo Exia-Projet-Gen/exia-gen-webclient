@@ -11,6 +11,7 @@ class Table extends Component {
             {
                 Header: 'Id',
                 accessor: 'id',
+                maxWidth: 50
             },
             {
                 Header: 'Word',
