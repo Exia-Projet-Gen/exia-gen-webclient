@@ -7,6 +7,7 @@ import SearchForm from './SearchForm';
 import Table from './Table';
 import AlertContainer from 'react-alert';
 import FontAwesome from 'react-fontawesome';
+import Loader from 'halogen/RingLoader';
 
 class App extends Component {
 
@@ -20,6 +21,7 @@ class App extends Component {
         super(props);
 
         this.state = {
+            loading: true,
             datas: [],
             selectedRow: {
                 id: -1,
@@ -33,7 +35,8 @@ class App extends Component {
             .then((response) => response.json())
             .then((responseJson) => {
                 this.setState({
-                    datas: responseJson
+                    datas: responseJson,
+                    loading: false
                 })
             })
             .catch((error) => {
@@ -54,7 +57,9 @@ class App extends Component {
                         id: -1,
                         name: ""
                     }
-                })
+                });
+
+                this.showAlert("info", responseJson.length + " words founds", "info");
             })
             .catch((error) => {
                 console.error(error);
@@ -180,7 +185,7 @@ class App extends Component {
                 color= "#c12e2a ";
                 break;
             case "info":
-                color= "#5cb85c";
+                color= "#eeeeee";
                 break;
         }
         this.msg.show(message, {
@@ -195,29 +200,34 @@ class App extends Component {
 
     alertOptions = {
         offset: 14,
-        position: 'bottom left',
+        position: 'bottom right',
         theme: 'dark',
         time: 5000,
         transition: 'scale'
     };
 
     render() {
+
+        let renderedTable;
+        renderedTable = this.state.loading ? <Loader className="App-loader" color="#265a88" size="120px" margin="4px" /> : (
+                    <Table datas={ this.state.datas } selectedWord={this.state.selectedRow} selectRowAction={(selectedRow) => ( this.setState({selectedRow: selectedRow}) ) } />
+                 );
+
         return (
           <div className="App">
             <div className="App-header">
-              <img src={logo} className="App-logo" alt="logo" />
               <h1>EXIA GEN DICTIONARY</h1>
             </div>
-            <div className="container dictionary-container">
-                <SearchForm performSearch={(pattern) => ( this.performSearchRequest(pattern) )} />
-                <CreationForm
-                    selectedWord={this.state.selectedRow}
-                    performCreate={(pattern) => ( this.performCreateRequest(pattern) )}
-                    performDelete={() => ( this.performDeleteRequest() ) }
-                />
-                <Table datas={ this.state.datas } selectedWord={this.state.selectedRow} selectRowAction={(selectedRow) => ( this.setState({selectedRow: selectedRow}) ) } />
-                <AlertContainer ref={a => this.msg = a} {...this.alertOptions} />
-            </div>
+              <div className="container dictionary-container">
+                  <SearchForm performSearch={(pattern) => ( this.performSearchRequest(pattern) )} />
+                  <CreationForm
+                      selectedWord={this.state.selectedRow}
+                      performCreate={(pattern) => ( this.performCreateRequest(pattern) )}
+                      performDelete={() => ( this.performDeleteRequest() ) }
+                  />
+                  { renderedTable }
+                  <AlertContainer ref={a => this.msg = a} {...this.alertOptions} />
+              </div>
           </div>
         );
     }

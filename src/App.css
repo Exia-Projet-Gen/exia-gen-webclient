@@ -1,9 +1,18 @@
+body {
+  height: 100vh;
+}
+
 .App {
   text-align: center;
+  position: relative;
 }
 
 .dictionary-container {
   padding-top: 20px;
+}
+
+.App-loader > div {
+  margin:15% auto 0 auto;
 }
 
 .App-logo {
