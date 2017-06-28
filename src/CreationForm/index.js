@@ -28,6 +28,16 @@ class Form extends Component {
         this.props.performCreate(pattern);
     }
 
+    handleSubmit(e) {
+        e.preventDefault();
+
+        this.setState({
+            pattern: ""
+        }, );
+
+        return this.props.performCreate(this.state.pattern);
+    }
+
     render() {
 
         const hasSelectedRow = this.props.selectedWord.id !== -1;
@@ -35,7 +45,7 @@ class Form extends Component {
         const btnVal = hasSelectedRow ? "Update" : "Create";
 
         return (
-            <BForm horizontal className="col-sm-6">
+            <BForm horizontal className="col-sm-6" onSubmit={ (e) => ( this.handleSubmit(e) )}>
                 <FormGroup controlId="formHorizontalCreation" className="col-sm-12">
                     <Col sm={9}>
                         <InputGroup className="col-sm-12">

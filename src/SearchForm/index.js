@@ -43,7 +43,7 @@ class Form extends Component {
             <BForm inline className="col-sm-6" onSubmit={ (e) => ( this.handleSubmit(e) ) }>
                 <FormGroup controlId="formHorizontalSearch" className="col-sm-12">
                     <Col sm={2}>
-                        <Button  bsStyle="success" type="button" onClick={ (e) => ( this.handleBtnClick("eb", e) )}>
+                        <Button  bsStyle="success" type="button" onClick={ (e) => ( this.handleBtnClick("", e) )}>
                             <FontAwesome
                                 name="refresh"
                                 size='lg'
