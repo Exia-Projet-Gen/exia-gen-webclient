@@ -15,7 +15,7 @@ class Table extends Component {
             },
             {
                 Header: 'Word',
-                accessor: 'name',
+                accessor: 'value',
             }
         ];
 
@@ -40,7 +40,7 @@ class Table extends Component {
                         style,
                         onClick: () => this.props.selectRowAction({
                             id: rowInfo.row.id,
-                            name: rowInfo.row.name
+                            value: rowInfo.row.value
                         })
                     };
                 }}

@@ -11,7 +11,7 @@ import Loader from 'halogen/RingLoader';
 
 class App extends Component {
 
-    baseURI = "http://localhost:10080/dictionaryFacade-war/gen/dictionary/";
+    baseURI = "http://localhost:10080/exia-rest-crud/crud/dictionary/";
     urlToFetchDatas = this.baseURI;
     urlToSearchDatas = this.baseURI + "search/";
     urlToPostData = this.baseURI;
@@ -55,7 +55,7 @@ class App extends Component {
                     datas: responseJson,
                     selectedRow: {
                         id: -1,
-                        name: ""
+                        value: ""
                     }
                 });
 
@@ -79,7 +79,7 @@ class App extends Component {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 },
-                body: JSON.stringify({name: word})
+                body: JSON.stringify({value: word})
             })
                 .then((response) => response.json())
                 .then((responseJson) => {
@@ -87,14 +87,14 @@ class App extends Component {
                     this.setState({
                         datas: this.state.datas.concat([{
                             id: responseJson.id,
-                            name: responseJson.name
+                            value: responseJson.value
                         }]),
                     });
 
                     this.showAlert("success", "Word has been created successfully", "check");
                 })
                 .catch((error) => {
-                    this.showAlert("error", "An error occurred while creating the Word " + word.name, "bomb");
+                    this.showAlert("error", "An error occurred while creating the Word " + word, "bomb");
                 });
         }
     }
@@ -110,7 +110,7 @@ class App extends Component {
             },
             body: JSON.stringify({
                 id: word.id,
-                name: newValue
+                value: newValue
             })
         })
             .then((responseJson) => {
@@ -121,12 +121,12 @@ class App extends Component {
                 this.setState({
                     datas: [
                         ...datas.slice(0,index),
-                        {id: word.id, name: newValue},
+                        {id: word.id, value: newValue},
                         ...datas.slice(index+1)
                     ],
                     selectedRow: {
                         id: -1,
-                        name: ""
+                        value: ""
                     }
                 });
                 this.showAlert("success", "Word has been updated successfully", "check");
@@ -153,7 +153,7 @@ class App extends Component {
                     this.setState({
                         selectedRow: {
                           id: -1,
-                          name: ""
+                          value: ""
                         },
                         datas: updatedDatas
                     });
