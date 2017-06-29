@@ -4,7 +4,9 @@ import './App.css';
 
 import CreationForm from './CreationForm';
 import SearchForm from './SearchForm';
-import Table from './Table';
+import Table from './DictionaryTable';
+import FilesTable from './FilesTable';
+import Topbar from './Topbar';
 import AlertContainer from 'react-alert';
 import FontAwesome from 'react-fontawesome';
 import Loader from 'halogen/RingLoader';
@@ -16,6 +18,7 @@ class App extends Component {
     urlToSearchDatas = this.baseURI + "search/";
     urlToPostData = this.baseURI;
     urlToDeleteData = this.baseURI;
+    urlToFetchFilesDatas = "http://localhost:10080/exia-rest-crud/crud/decodedFile/";
 
     constructor(props) {
         super(props);
@@ -23,6 +26,8 @@ class App extends Component {
         this.state = {
             loading: true,
             datas: [],
+            filesDatas: [],
+            activeTable: "dictionary",
             selectedRow: {
                 id: -1,
                 value: ""
@@ -60,6 +65,24 @@ class App extends Component {
                 });
 
                 this.showAlert("info", responseJson.length + " words founds", "info");
+            })
+            .catch((error) => {
+                this.showAlert("error", "An error occurred while fetching datas. Please, retry later", "bomb", 20000);
+            });
+    }
+
+    performSearchFilesRequest() {
+
+        const url = this.urlToFetchFilesDatas;
+
+        fetch(url)
+            .then((response) => response.json())
+            .then((responseJson) => {
+                this.setState({
+                    filesDatas: responseJson
+                });
+
+                this.showAlert("info", responseJson.length + " decoded files founds", "info");
             })
             .catch((error) => {
                 this.showAlert("error", "An error occurred while fetching datas. Please, retry later", "bomb", 20000);
@@ -173,7 +196,6 @@ class App extends Component {
         return false;
     }
 
-
     showAlert(type, message, iconName, time = 5000) {
 
         let color;
@@ -199,6 +221,16 @@ class App extends Component {
         })
     }
 
+    handleNavbarAction(btnActivated) {
+        if (btnActivated === "files") {
+            this.performSearchFilesRequest();
+        }
+
+        this.setState({
+            activeTable: btnActivated
+        });
+    }
+
     alertOptions = {
         offset: 14,
         position: 'bottom right',
@@ -209,24 +241,37 @@ class App extends Component {
 
     render() {
 
-        let renderedTable;
-        renderedTable = this.state.loading ? <Loader className="App-loader" color="#265a88" size="120px" margin="4px" /> : (
+        let renderedDictionaryTable;
+        renderedDictionaryTable = this.state.loading ? <Loader className="App-loader" color="#265a88" size="120px" margin="4px" /> : (
                     <Table datas={ this.state.datas } selectedWord={this.state.selectedRow} selectRowAction={(selectedRow) => ( this.setState({selectedRow: selectedRow}) ) } />
                  );
+
+        let renderedFilesTable;
+        renderedFilesTable = this.state.loading ? <Loader className="App-loader" color="#265a88" size="120px" margin="4px" /> : (
+                <FilesTable datas={ this.state.filesDatas }  />
+            );
 
         return (
           <div className="App">
             <div className="App-header">
               <h1>EXIA GEN DICTIONARY</h1>
             </div>
+              <Topbar activeTable={this.state.activeTable} onClick={(activeTable) => (this.handleNavbarAction(activeTable))} />
               <div className="container dictionary-container">
-                  <SearchForm performSearch={(pattern) => ( this.performSearchRequest(pattern) )} />
-                  <CreationForm
-                      selectedWord={this.state.selectedRow}
-                      performCreate={(pattern) => ( this.performCreateRequest(pattern) )}
-                      performDelete={() => ( this.performDeleteRequest() ) }
-                  />
-                  { renderedTable }
+                  {
+                      this.state.activeTable === "dictionary" &&
+                      <SearchForm performSearch={(pattern) => ( this.performSearchRequest(pattern) )} />
+                  }
+                  {
+                      this.state.activeTable === "dictionary" &&
+                      <CreationForm
+                          selectedWord={this.state.selectedRow}
+                          performCreate={(pattern) => ( this.performCreateRequest(pattern) )}
+                          performDelete={() => ( this.performDeleteRequest() ) }
+                      />
+                  }
+
+                  { this.state.activeTable === "dictionary" ? renderedDictionaryTable : renderedFilesTable}
                   <AlertContainer ref={a => this.msg = a} {...this.alertOptions} />
               </div>
           </div>
