@@ -16,16 +16,22 @@ class FilesTable extends Component {
             {
                 Header: 'Key',
                 accessor: 'key',
+                maxWidth: 110,
                 filterMethod: (filter, row) => (row[filter.id].includes(filter.value))
             },
             {
                 Header: 'File name',
                 accessor: 'fileName',
+                maxWidth: 150,
                 filterMethod: (filter, row) => (row[filter.id].includes(filter.value))
             },
             {
                 Header: 'Ratio of french words',
                 accessor: 'matchPercent',
+                maxWidth: 50,
+                Cell: row => (
+                    Math.round(row.value * 100) / 100
+                )
             },
             {
                 Header: 'Mails found',
